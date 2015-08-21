@@ -28,8 +28,11 @@ RUN apt-get install -y subversion git-core tar unzip wget bzip2 build-essential 
 RUN apt-get install -y autoconf apache2-dev libtool libxml2-dev libbz2-dev libgeos-dev libgeos++-dev libproj-dev gdal-bin libgdal1-dev mapnik-utils python-mapnik libmapnik-dev
 
 # Install postgresql and postgis
-RUN apt-get install -y postgresql-9.3-postgis-2.1 postgresql-contrib postgresql-server-dev-9.3
-
+RUN locale-gen en_US.UTF-8
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' | tee /etc/apt/sources.list.d/pgdg.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y postgresql-9.4-postgis postgresql-contrib postgresql-server-dev-9.4
 # Install osm2pgsql
 RUN cd /tmp && git clone git://github.com/openstreetmap/osm2pgsql.git
 RUN cd /tmp/osm2pgsql && \
@@ -86,11 +89,11 @@ ADD mod_tile.conf /etc/apache2/mods-available/
 RUN a2enmod mod_tile
 
 # Ensure the webserver user can connect to the gis database
-RUN sed -i -e 's/local   all             all                                     peer/local gis www-data peer/' /etc/postgresql/9.3/main/pg_hba.conf
+RUN sed -i -e 's/local   all             all                                     peer/local gis www-data peer/' /etc/postgresql/9.4/main/pg_hba.conf
 
 # Tune postgresql
 ADD postgresql.conf.sed /tmp/
-RUN sed --file /tmp/postgresql.conf.sed --in-place /etc/postgresql/9.3/main/postgresql.conf
+RUN sed --file /tmp/postgresql.conf.sed --in-place /etc/postgresql/9.4/main/postgresql.conf
 
 # Define the application logging logic
 ADD syslog-ng.conf /etc/syslog-ng/conf.d/local.conf

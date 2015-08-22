@@ -90,7 +90,7 @@ dropdb () {
 dumpdb () {
     echo "Dumping database"
     cd /var/www
-    setuser postgres pgdump gis | gzip > /data/gis_pgdump.gz
+    setuser postgres pg_dump gis | gzip > /data/gis_pgdump.gz
 }
 
 cli () {

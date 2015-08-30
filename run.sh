@@ -17,6 +17,10 @@ _startservice () {
     sv start $1 || die "Could not start $1"
 }
 
+startkosmtik () {
+    _startservice kosmtik
+}
+
 startdb () {
     _startservice postgresql
 }

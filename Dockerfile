@@ -122,8 +122,8 @@ RUN cd /tmp/kosmtik && \
 #    ./get-shapefiles.sh
 	
 # Create a `kosmtik` `runit` service
-ADD kosmtik /etc/sv/kosmtik
-RUN update-service --add /etc/sv/kosmtik
+#ADD kosmtik /etc/sv/kosmtik
+#RUN update-service --add /etc/sv/kosmtik
 
 # Create a `postgresql` `runit` service
 ADD postgresql /etc/sv/postgresql

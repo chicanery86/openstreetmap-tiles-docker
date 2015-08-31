@@ -4,4 +4,4 @@
 # Runit run script for kosmtik
 #
 
-exec /sbin/setuser postgres node /tmp/kosmtik/index.js serve /tmp/openstreetmap-carto/project.mml
+exec node /tmp/kosmtik/index.js serve /tmp/openstreetmap-carto/project.mml

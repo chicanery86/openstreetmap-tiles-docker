@@ -107,7 +107,7 @@ RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo -E bash -
 RUN apt-get install -y nodejs
 
 # install fonts
-RUN apt-get install ttf-dejavu fonts-droid ttf-unifont fonts-sipa-arundina fonts-sil-padauk fonts-khmeros \
+RUN apt-get install -y ttf-dejavu fonts-droid ttf-unifont fonts-sipa-arundina fonts-sil-padauk fonts-khmeros \
 ttf-indic-fonts-core fonts-taml-tscu ttf-kannada-fonts
 
 # install kosmtik
@@ -116,10 +116,10 @@ RUN cd /tmp/kosmtik && \
     npm install && \
     node index.js plugins --install kosmtik-mbtiles-export
 	
-# install osm-carto project
-RUN cd /tmp && git clone https://github.com/gravitystorm/openstreetmap-carto.git
-	RUN cd /tmp/openstreetmap-carto && \
-    ./get-shapefiles.sh
+## install osm-carto project
+#RUN cd /tmp && git clone https://github.com/gravitystorm/openstreetmap-carto.git
+#	RUN cd /tmp/openstreetmap-carto && \
+#    ./get-shapefiles.sh
 	
 # Create a `kosmtik` `runit` service
 ADD kosmtik /etc/sv/kosmtik

@@ -111,14 +111,14 @@ RUN apt-get install -y ttf-dejavu fonts-droid ttf-unifont fonts-sipa-arundina fo
 ttf-indic-fonts-core fonts-taml-tscu ttf-kannada-fonts
 
 # install kosmtik
-RUN cd /tmp && git clone https://github.com/kosmtik/kosmtik.git
-RUN cd /tmp/kosmtik && \
+RUN cd /usr/local && git clone https://github.com/kosmtik/kosmtik.git
+RUN cd /usr/local/kosmtik && \
     npm install && \
     node index.js plugins --install kosmtik-mbtiles-export
 	
 ## install osm-carto project
-#RUN cd /tmp && git clone https://github.com/gravitystorm/openstreetmap-carto.git
-#	RUN cd /tmp/openstreetmap-carto && \
+#RUN cd /usr/local && git clone https://github.com/gravitystorm/openstreetmap-carto.git
+#	RUN cd /usr/local/openstreetmap-carto && \
 #    ./get-shapefiles.sh
 	
 # Create a `kosmtik` `runit` service

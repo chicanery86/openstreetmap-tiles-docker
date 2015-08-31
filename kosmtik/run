@@ -4,4 +4,4 @@
 # Runit run script for kosmtik
 #
 
-chpst -uwww-data node /tmp/kosmtik/index.js serve /tmp/openstreetmap-carto/project.mml
+chpst -uwww-data node /usr/local/kosmtik/index.js serve /usr/local/openstreetmap-carto/project.mml

@@ -10,7 +10,7 @@
 # forked from homme/openstreetmap-tiles
 
 FROM phusion/baseimage:0.9.17
-MAINTAINER Homme Zwaagstra <hrz@geodata.soton.ac.uk>
+MAINTAINER xingfuryda
 
 # Set the locale. This affects the encoding of the Postgresql template
 # databases.
@@ -29,77 +29,77 @@ RUN apt-get install -y subversion git-core tar unzip wget bzip2 build-essential 
 RUN apt-get install -y autoconf apache2-dev libtool libxml2-dev libbz2-dev libgeos-dev libgeos++-dev libproj-dev gdal-bin libgdal1-dev mapnik-utils python-mapnik libmapnik-dev
 
 # Install postgresql and postgis
-##RUN locale-gen en_US.UTF-8
-##RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' | tee /etc/apt/sources.list.d/pgdg.list
-##RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-##RUN apt-get update
-##RUN DEBIAN_FRONTEND=noninteractive apt-get install -y postgresql-9.4-postgis postgresql-contrib postgresql-server-dev-9.4
+RUN locale-gen en_US.UTF-8
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' | tee /etc/apt/sources.list.d/pgdg.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y postgresql-9.4-postgis postgresql-contrib postgresql-server-dev-9.4
 
 # Install osm2pgsql
-##RUN cd /tmp && git clone git://github.com/openstreetmap/osm2pgsql.git
-##RUN cd /tmp/osm2pgsql && \
-##    ./autogen.sh && \
-##    ./configure && \
-##    make && make install
+RUN cd /tmp && git clone git://github.com/openstreetmap/osm2pgsql.git
+RUN cd /tmp/osm2pgsql && \
+    ./autogen.sh && \
+    ./configure && \
+    make && make install
 
 ## Install the Mapnik library
-#RUN cd /tmp && git clone git://github.com/mapnik/mapnik
-#RUN cd /tmp/mapnik && \
-#    git checkout 2.2.x && \
-#    python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/ && \
-#    python scons/scons.py && \
-#    python scons/scons.py install && \
-#    ldconfig
-#
-## Verify that Mapnik has been installed correctly
-#RUN python -c 'import mapnik'
-#
-## Install mod_tile and renderd
-#RUN cd /tmp && git clone git://github.com/openstreetmap/mod_tile.git
-#RUN cd /tmp/mod_tile && \
-#    ./autogen.sh && \
-#    ./configure && \
-#    make && \
-#    make install && \
-#    make install-mod_tile && \
-#    ldconfig
-#
-## Install the Mapnik stylesheet
-#RUN cd /usr/local/src && svn co http://svn.openstreetmap.org/applications/rendering/mapnik mapnik-style
-#
-## Install the coastline data
-#RUN cd /usr/local/src/mapnik-style && ./get-coastlines.sh /usr/local/share
-#
-## Configure mapnik style-sheets
-#RUN cd /usr/local/src/mapnik-style/inc && cp fontset-settings.xml.inc.template fontset-settings.xml.inc
-#ADD datasource-settings.sed /tmp/
-#RUN cd /usr/local/src/mapnik-style/inc && sed --file /tmp/datasource-settings.sed  datasource-settings.xml.inc.template > datasource-settings.xml.inc
-#ADD settings.sed /tmp/
-#RUN cd /usr/local/src/mapnik-style/inc && sed --file /tmp/settings.sed  settings.xml.inc.template > settings.xml.inc
-#
-## Configure renderd
-#ADD renderd.conf.sed /tmp/
-#RUN cd /usr/local/etc && sed --file /tmp/renderd.conf.sed --in-place renderd.conf
-#
-## Create the files required for the mod_tile system to run
-#RUN mkdir /var/run/renderd && chown www-data: /var/run/renderd
-#RUN mkdir /var/lib/mod_tile && chown www-data /var/lib/mod_tile
-#
-## Configure mod_tile
-#ADD mod_tile.load /etc/apache2/mods-available/
-#ADD mod_tile.conf /etc/apache2/mods-available/
-#RUN a2enmod mod_tile
+RUN cd /tmp && git clone git://github.com/mapnik/mapnik
+RUN cd /tmp/mapnik && \
+    git checkout 2.2.x && \
+    python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/ && \
+    python scons/scons.py && \
+    python scons/scons.py install && \
+    ldconfig
+
+# Verify that Mapnik has been installed correctly
+RUN python -c 'import mapnik'
+
+# Install mod_tile and renderd
+RUN cd /tmp && git clone git://github.com/openstreetmap/mod_tile.git
+RUN cd /tmp/mod_tile && \
+    ./autogen.sh && \
+    ./configure && \
+    make && \
+    make install && \
+    make install-mod_tile && \
+    ldconfig
+
+# Install the Mapnik stylesheet
+RUN cd /usr/local/src && svn co http://svn.openstreetmap.org/applications/rendering/mapnik mapnik-style
+
+# Install the coastline data
+RUN cd /usr/local/src/mapnik-style && ./get-coastlines.sh /usr/local/share
+
+# Configure mapnik style-sheets
+RUN cd /usr/local/src/mapnik-style/inc && cp fontset-settings.xml.inc.template fontset-settings.xml.inc
+ADD datasource-settings.sed /tmp/
+RUN cd /usr/local/src/mapnik-style/inc && sed --file /tmp/datasource-settings.sed  datasource-settings.xml.inc.template > datasource-settings.xml.inc
+ADD settings.sed /tmp/
+RUN cd /usr/local/src/mapnik-style/inc && sed --file /tmp/settings.sed  settings.xml.inc.template > settings.xml.inc
+
+# Configure renderd
+ADD renderd.conf.sed /tmp/
+RUN cd /usr/local/etc && sed --file /tmp/renderd.conf.sed --in-place renderd.conf
+
+# Create the files required for the mod_tile system to run
+RUN mkdir /var/run/renderd && chown www-data: /var/run/renderd
+RUN mkdir /var/lib/mod_tile && chown www-data /var/lib/mod_tile
+
+# Configure mod_tile
+ADD mod_tile.load /etc/apache2/mods-available/
+ADD mod_tile.conf /etc/apache2/mods-available/
+RUN a2enmod mod_tile
 
 # Ensure the webserver user can connect to the gis database
-#RUN sed -i -e 's/local   all             all                                     peer/local gis www-data peer/' /etc/postgresql/9.4/main/pg_hba.conf
+RUN sed -i -e 's/local   all             all                                     peer/local gis www-data peer/' /etc/postgresql/9.4/main/pg_hba.conf
 
 # Tune postgresql
-##ADD postgresql.conf.sed /tmp/
-##RUN sed --file /tmp/postgresql.conf.sed --in-place /etc/postgresql/9.4/main/postgresql.conf
+ADD postgresql.conf.sed /tmp/
+RUN sed --file /tmp/postgresql.conf.sed --in-place /etc/postgresql/9.4/main/postgresql.conf
 
 # Define the application logging logic
-##ADD syslog-ng.conf /etc/syslog-ng/conf.d/local.conf
-##RUN rm -rf /var/log/postgresql
+ADD syslog-ng.conf /etc/syslog-ng/conf.d/local.conf
+RUN rm -rf /var/log/postgresql
 
 ## kosmtik
 # install nodejs
@@ -117,25 +117,25 @@ RUN cd /usr/local/kosmtik && \
     node index.js plugins --install kosmtik-mbtiles-export
 	
 ## install osm-carto project
-##RUN cd /usr/local && git clone https://github.com/gravitystorm/openstreetmap-carto.git
-##	RUN cd /usr/local/openstreetmap-carto && \
-##    ./get-shapefiles.sh
+RUN cd /usr/local && git clone https://github.com/gravitystorm/openstreetmap-carto.git
+	RUN cd /usr/local/openstreetmap-carto && \
+    ./get-shapefiles.sh
 	
 # Create a `kosmtik` `runit` service
-##ADD kosmtik /etc/sv/kosmtik
-##RUN update-service --add /etc/sv/kosmtik
+ADD kosmtik /etc/sv/kosmtik
+RUN update-service --add /etc/sv/kosmtik
 
 # Create a `postgresql` `runit` service
-##ADD postgresql /etc/sv/postgresql
-##RUN update-service --add /etc/sv/postgresql
+ADD postgresql /etc/sv/postgresql
+RUN update-service --add /etc/sv/postgresql
 
 # Create an `apache2` `runit` service
-##ADD apache2 /etc/sv/apache2
-##RUN update-service --add /etc/sv/apache2
+ADD apache2 /etc/sv/apache2
+RUN update-service --add /etc/sv/apache2
 
 # Create a `renderd` `runit` service
-##ADD renderd /etc/sv/renderd
-##RUN update-service --add /etc/sv/renderd
+ADD renderd /etc/sv/renderd
+RUN update-service --add /etc/sv/renderd
 
 # Clean up APT when done
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

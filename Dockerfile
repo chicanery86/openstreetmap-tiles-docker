@@ -101,30 +101,6 @@ RUN sed --file /tmp/postgresql.conf.sed --in-place /etc/postgresql/9.4/main/post
 ADD syslog-ng.conf /etc/syslog-ng/conf.d/local.conf
 RUN rm -rf /var/log/postgresql
 
-## kosmtik
-# install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo -E bash -
-RUN apt-get install -y nodejs
-
-# install fonts
-RUN apt-get install -y ttf-dejavu fonts-droid ttf-unifont fonts-sipa-arundina fonts-sil-padauk fonts-khmeros \
-ttf-indic-fonts-core fonts-taml-tscu ttf-kannada-fonts
-
-# install kosmtik
-RUN cd /usr/local && git clone https://github.com/kosmtik/kosmtik.git
-RUN cd /usr/local/kosmtik && \
-    npm install && \
-    node index.js plugins --install kosmtik-mbtiles-export
-	
-## install osm-carto project
-RUN cd /usr/local && git clone https://github.com/gravitystorm/openstreetmap-carto.git
-	RUN cd /usr/local/openstreetmap-carto && \
-    ./get-shapefiles.sh
-	
-# Create a `kosmtik` `runit` service
-ADD kosmtik /etc/sv/kosmtik
-RUN update-service --add /etc/sv/kosmtik
-
 # Create a `postgresql` `runit` service
 ADD postgresql /etc/sv/postgresql
 RUN update-service --add /etc/sv/postgresql
@@ -141,7 +117,7 @@ RUN update-service --add /etc/sv/renderd
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Expose the webserver and database ports
-EXPOSE 80 5432 6789
+EXPOSE 80 5432
 
 # We need the volume for importing data from
 VOLUME ["/data"]

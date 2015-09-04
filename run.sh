@@ -17,10 +17,6 @@ _startservice () {
     sv start $1 || die "Could not start $1"
 }
 
-startkosmtik () {
-    _startservice kosmtik
-}
-
 startdb () {
     _startservice postgresql
 }
@@ -36,6 +32,10 @@ initdb () {
     sudo -u postgres -i /usr/lib/postgresql/9.4/bin/initdb --pgdata /var/lib/postgresql/9.4/main
     ln -s /etc/ssl/certs/ssl-cert-snakeoil.pem /var/lib/postgresql/9.4/main/server.crt
     ln -s /etc/ssl/private/ssl-cert-snakeoil.key /var/lib/postgresql/9.4/main/server.key
+	chmod -R 0700 /etc/ssl/certs
+	chown -R postgres /etc/ssl/certs
+	chmod -R 0700 /etc/ssl/private
+	chown -R postgres /etc/ssl/private
 }
 
 createuser () {

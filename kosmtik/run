@@ -1,7 +1,0 @@
-#!/bin/sh
-
-##
-# Runit run script for kosmtik
-#
-
-exec /usr/bin/node /usr/local/kosmtik/index.js serve /usr/local/openstreetmap-carto/project.mml

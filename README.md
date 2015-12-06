@@ -5,6 +5,8 @@ This repository contains instructions for building a
 serving software stack.  It is based on the
 [Switch2OSM instructions](http://switch2osm.org/serving-tiles/manually-building-a-tile-server-12-04/).
 
+Based also on [geo-data/openstreetmap-tiles-docker](https://github.com/geo-data/openstreetmap-tiles-docker)
+
 As well as providing an easy way to set up and run the tile serving software it
 also provides instructions for managing the back end database, allowing you to:
 
@@ -12,7 +14,7 @@ also provides instructions for managing the back end database, allowing you to:
 * Import OSM data into the database
 * Drop the database
 
-Run `docker run homme/openstreetmap-tiles` for usage instructions.
+Run `docker run xingfuryda/openstreetmap-tiles-docker` for usage instructions.
 
 ## About
 
@@ -32,5 +34,5 @@ includes:
 
 This is a work in progress and although generally adequate it could benefit
 from improvements.  Please
-[submit issues](https://github.com/geo-data/openstreetmap-tiles-docker/issues)
+[submit issues](https://github.com/xingfuryda/openstreetmap-tiles-docker/issues)
 on GitHub. Pull requests are very welcome!

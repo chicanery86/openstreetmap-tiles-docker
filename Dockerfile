@@ -21,12 +21,19 @@ RUN update-locale LANG=C.UTF-8
 RUN apt-get update -y
 RUN apt-get install -y software-properties-common python-software-properties
 
-RUN apt-get install -y libboost-dev libboost-filesystem-dev libboost-program-options-dev libboost-python-dev libboost-regex-dev libboost-system-dev libboost-thread-dev
+RUN apt-get install -y make cmake libboost1.55-dev libboost-filesystem1.55-dev libboost-program-options1.55-dev libboost-python1.55-dev libboost-regex1.55-dev libboost-system1.55-dev libboost-thread1.55-dev
 
 # Install remaining dependencies
 RUN apt-get install -y subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libpq-dev libbz2-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libprotobuf-dev protobuf-compiler pkg-config libfreetype6-dev libpng12-dev libtiff4-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont
 
-RUN apt-get install -y autoconf apache2-dev libtool libxml2-dev libbz2-dev libgeos-dev libgeos++-dev libproj-dev gdal-bin libgdal1-dev mapnik-utils python-mapnik libmapnik-dev
+RUN apt-get install -y libgeos++-dev libproj-dev gdal-bin libgdal1-dev mapnik-utils python-mapnik libmapnik-dev
+
+# install compiler
+RUN apt-get install -y gcc-4.8 g++-4.8
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
+RUN update-alternatives --config gcc
+RUN update-alternatives --config g++
 
 # Install postgresql and postgis
 RUN locale-gen en_US.UTF-8
@@ -37,10 +44,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y postgresql-9.4-postgis pos
 
 # Install osm2pgsql
 RUN cd /tmp && git clone git://github.com/openstreetmap/osm2pgsql.git
-RUN cd /tmp/osm2pgsql && \
-    ./autogen.sh && \
-    ./configure && \
-    make && make install
+RUN cd /tmp/osm2pgsql && mkdir build && cd build && cmake ..
+RUN cd /tmp/osm2pgsql/build && make && make install
 
 ## Install the Mapnik library
 RUN cd /tmp && git clone git://github.com/mapnik/mapnik
